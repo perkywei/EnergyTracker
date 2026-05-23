@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台 | 智慧能耗管家</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="login-container" id="loginContainer">
+    <div class="login-card">
+        <h2>管理员登录</h2>
+        <input type="password" id="adminPwd" placeholder="请输入管理员密码">
+        <button id="adminLoginBtn">登录</button>
+        <div id="loginMsg" class="error-msg"></div>
+    </div>
+</div>
+
+<div class="dashboard" id="dashboard" style="display: none;">
+    <div class="header">
+        <h1>👑 管理员控制台</h1>
+        <button id="logoutBtn" class="logout-btn">退出登录</button>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span>🔑 生成注册码</span>
+            <button id="generateCodeBtn">生成新注册码</button>
+        </div>
+        <div id="newCodeDisplay" class="code-display" style="display: none;">
+            <p>新注册码：<strong id="newCode"></strong> 有效期至 <span id="newCodeExpiry"></span></p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">📋 所有注册码列表</div>
+        <div class="table-wrapper">
+            <table id="codesTable">
+                <thead>
+                    <tr><th>注册码</th><th>生成时间</th><th>有效期至</th><th>状态</th>
+                </thead>
+                <tbody id="codesTableBody">
+                    <tr><td colspan="4">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">👥 所有用户列表</div>
+        <div class="table-wrapper">
+            <table id="usersTable">
+                <thead>
+                     <tr>
+                        <th>用户名</th>
+                        <th>注册时间</th>
+                        <th>操作</th>
+                     </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                     <tr><td colspan="3">加载中...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>
