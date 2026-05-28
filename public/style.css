@@ -1,0 +1,646 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+body {
+    background: #eef3fa;
+    padding: 24px 20px;
+    color: #153e51;
+}
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+.card {
+    background: white;
+    border-radius: 32px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.03);
+    padding: 1.8rem;
+    margin-bottom: 2rem;
+    border: 1px solid #dde9f0;
+}
+.card-header {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border-left: 6px solid #2c7da0;
+    padding-left: 1rem;
+    color: #1f5e7a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.auth-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.auth-bar .user-info {
+    background: #eef2f5;
+    padding: 0.3rem 1rem;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.type-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: #eaf2f7;
+    padding: 0.4rem;
+    border-radius: 60px;
+    width: fit-content;
+}
+.type-btn {
+    padding: 0.5rem 1.8rem;
+    border-radius: 40px;
+    font-weight: 600;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #2c5a6e;
+}
+.type-btn.active {
+    background: #2c7da0;
+    color: white;
+}
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+.input-field {
+    flex: 1 1 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.input-field label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #3c7a8c;
+}
+.input-field input {
+    background: #fafeff;
+    border: 1px solid #cce0e8;
+    border-radius: 28px;
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    outline: none;
+}
+.double-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    background: #f6fbfe;
+    padding: 1.2rem;
+    border-radius: 28px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #dde9f0;
+}
+button {
+    background: #2c7da0;
+    border: none;
+    padding: 0.7rem 1.8rem;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+button:hover {
+    background: #1f5e7a;
+    transform: translateY(-1px);
+}
+.btn-outline {
+    background: white;
+    border: 1px solid #c2dae6;
+    color: #1f5e7a;
+}
+.btn-outline:hover {
+    background: #e9f2f7;
+    transform: none;
+}
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 24px;
+    border: 1px solid #e2edf2;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+th {
+    background: #eef3f8;
+    padding: 0.9rem 0.5rem;
+    font-weight: 700;
+}
+td {
+    padding: 0.7rem 0.4rem;
+    border-bottom: 1px solid #eaf1f5;
+    vertical-align: middle;
+}
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+.badge-fuel {
+    background: #feeed6;
+    color: #bc6c25;
+}
+.badge-ev {
+    background: #daf0f8;
+    color: #1a6b8a;
+}
+.delete-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #7fa3b5;
+}
+.delete-btn:hover {
+    color: #c13b1b;
+    background: #ffe8e3;
+    border-radius: 30px;
+}
+.edit-btn {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #7fa3b5;
+    margin-right: 4px;
+}
+.edit-btn:hover {
+    color: #2c7da0;
+    background: #e3f0f7;
+    border-radius: 30px;
+}
+.chart-container {
+    background: white;
+    border-radius: 28px;
+    padding: 1rem;
+    border: 1px solid #e2edf2;
+    margin-top: 0;
+}
+canvas {
+    max-height: 340px;
+    width: 100%;
+}
+.info-note {
+    background: #eef2f5;
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    font-size: 0.72rem;
+    color: #2c5a6e;
+    margin-top: 1rem;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: white;
+    max-width: 560px;
+    width: 90%;
+    border-radius: 32px;
+    padding: 2rem;
+}
+.profile-menu-btn {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 40px;
+    color: #2c5a6e;
+    transition: 0.2s;
+}
+.profile-menu-btn.active {
+    background: #2c7da0;
+    color: white;
+}
+.profile-menu-btn:hover:not(.active) {
+    background: #eaf2f7;
+}
+/* ===== 注册协议弹窗 ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+.modal-box {
+    background: white;
+    max-width: 560px;
+    width: 92%;
+    max-height: 80vh;
+    border-radius: 32px;
+    padding: 2rem 1.8rem 1.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+}
+.modal-box h3 {
+    font-size: 1.3rem;
+    color: #1f5e7a;
+    margin-bottom: 1rem;
+    border-left: 5px solid #2c7da0;
+    padding-left: 0.8rem;
+}
+.modal-scroll {
+    flex: 1;
+    overflow-y: auto;
+    background: #f7fafc;
+    border: 1px solid #dde9f0;
+    border-radius: 20px;
+    padding: 1.2rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #153e51;
+    max-height: 55vh;
+    white-space: pre-wrap;
+}
+.modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+}
+.agree-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    color: #2c5a6e;
+    cursor: pointer;
+    user-select: none;
+}
+.agree-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #2c7da0;
+    cursor: pointer;
+}
+.btn-primary {
+    background: #2c7da0;
+    border: none;
+    padding: 0.7rem 1.8rem;
+    border-radius: 40px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+.btn-primary:hover:not(:disabled) {
+    background: #1f5e7a;
+}
+.btn-primary:disabled {
+    background: #b0cbd8;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* ============================================
+   移动端适配补丁
+   ============================================ */
+
+/* --- 小屏手机 (< 480px) --- */
+@media (max-width: 480px) {
+    body {
+        padding: 12px 10px;
+    }
+
+    .card {
+        padding: 1rem;
+        border-radius: 20px;
+        margin-bottom: 1.2rem;
+    }
+
+    .card-header {
+        font-size: 1.15rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        border-left-width: 4px;
+        padding-left: 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .auth-bar {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .type-selector {
+        width: 100%;
+        border-radius: 40px;
+    }
+    .type-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 0.5rem;
+        font-size: 0.85rem;
+    }
+
+    .form-grid {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    .input-field {
+        flex: 1 1 100%;
+    }
+
+    .double-row {
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 0.8rem;
+        border-radius: 16px;
+    }
+
+    .input-field input {
+        padding: 0.8rem 1rem;
+        font-size: 16px;
+        border-radius: 16px;
+    }
+
+    button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        border-radius: 28px;
+    }
+
+    form > div[style*="justify-content:flex-end"] {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    form > div[style*="justify-content:flex-end"] button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .card-header > div {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    #totalCostDisplay {
+        font-size: 0.78rem;
+        padding: 0.25rem 0.6rem;
+        margin-right: 0 !important;
+    }
+    #exportExcelBtn, #importExcelBtn {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .table-wrapper {
+        border-radius: 12px;
+        -webkit-overflow-scrolling: touch;
+    }
+    table {
+        font-size: 0.72rem;
+        min-width: 900px;
+    }
+    th {
+        padding: 0.6rem 0.3rem;
+        font-size: 0.68rem;
+        white-space: nowrap;
+    }
+    td {
+        padding: 0.5rem 0.3rem;
+        white-space: nowrap;
+    }
+
+    .chart-container {
+        border-radius: 16px;
+        padding: 0.6rem;
+    }
+    .chart-container h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    canvas {
+        max-height: 220px;
+    }
+
+    .info-note {
+        font-size: 0.68rem;
+        padding: 0.5rem 0.8rem;
+        border-radius: 12px;
+    }
+
+    .modal-box {
+        width: 95%;
+        max-height: 90vh;
+        padding: 1.5rem 1.2rem 1rem;
+        border-radius: 20px;
+    }
+    .modal-box h3 {
+        font-size: 1.1rem;
+    }
+    .modal-scroll {
+        font-size: 0.82rem;
+        padding: 0.8rem;
+        max-height: 50vh;
+        border-radius: 12px;
+    }
+    .modal-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+    }
+    .modal-actions > div {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .modal-actions button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .edit-btn, .delete-btn {
+        font-size: 1.3rem;
+        padding: 0.3rem;
+    }
+
+    .badge {
+        font-size: 0.62rem;
+        padding: 0.15rem 0.5rem;
+    }
+
+    .profile-menu-btn {
+        font-size: 0.82rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .modal {
+        padding: 12px;
+    }
+    .modal-content {
+        max-width: 100% !important;
+        width: 100%;
+        padding: 1.2rem 1rem;
+        border-radius: 20px;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+    .modal-content h3 {
+        font-size: 1.1rem;
+    }
+    .modal-content .form-grid {
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    .modal-content .double-row {
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 0.6rem;
+    }
+    .modal-content input {
+        font-size: 16px;
+        padding: 0.75rem 0.8rem;
+    }
+    .modal-content button {
+        width: 100%;
+    }
+    .modal-content > div[style*="justify-content:flex-end"] {
+        flex-direction: column;
+    }
+}
+
+/* --- 中等屏幕 / 大手机 (481px ~ 768px) --- */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding: 16px 14px;
+    }
+
+    .card {
+        padding: 1.3rem;
+        border-radius: 24px;
+    }
+
+    .card-header {
+        font-size: 1.3rem;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+
+    .type-selector {
+        width: 100%;
+    }
+    .type-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 1rem;
+    }
+
+    .form-grid {
+        gap: 1rem;
+    }
+    .input-field {
+        flex: 1 1 45%;
+    }
+
+    .double-row {
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    .input-field input {
+        font-size: 16px;
+        padding: 0.75rem 1rem;
+    }
+
+    .table-wrapper {
+        border-radius: 16px;
+    }
+    table {
+        font-size: 0.78rem;
+        min-width: 850px;
+    }
+    th, td {
+        padding: 0.6rem 0.4rem;
+    }
+
+    canvas {
+        max-height: 280px;
+    }
+
+    .modal-box {
+        width: 92%;
+        padding: 1.8rem 1.5rem;
+    }
+}
+
+/* --- 触控设备优化 --- */
+@media (hover: none) and (pointer: coarse) {
+    button, .btn-outline, .btn-primary {
+        min-height: 44px;
+    }
+
+    .edit-btn, .delete-btn {
+        min-width: 36px;
+        min-height: 36px;
+        padding: 0.4rem;
+    }
+
+    button:hover {
+        transform: none;
+    }
+
+    .input-field input:focus {
+        border-color: #2c7da0;
+        box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.15);
+    }
+}
+
+/* --- 横屏手机 --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 8px 16px;
+    }
+    .card {
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+    }
+    .card-header {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+    canvas {
+        max-height: 180px;
+    }
+}

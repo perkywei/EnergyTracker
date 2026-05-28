@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>智慧能耗管家 | 个人中心</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="container" id="app">
+    <!-- 登录/注册卡片 -->
+    <div id="authCard" class="card">
+        <div class="card-header">🔐 用户认证</div>
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+            <button id="showLoginBtn" style="background:#2c7da0;">登录</button>
+            <button id="showRegisterBtn" class="btn-outline">注册</button>
+        </div>
+        <div id="loginForm">
+            <div class="input-field"><label>用户名</label><input type="text" id="loginUsername" placeholder="自定义ID"></div>
+            <div class="input-field"><label>密码</label><input type="password" id="loginPassword" placeholder="密码"></div>
+            <button id="doLoginBtn">登录</button>
+        </div>
+        <div id="registerForm" style="display:none;">
+            <div class="input-field"><label>用户名</label><input type="text" id="regUsername" placeholder="自定义ID"></div>
+            <div class="input-field"><label>密码</label><input type="password" id="regPassword" placeholder="密码"></div>
+            <div class="card-header" style="font-size:1.2rem; margin-top:1rem;">🚗 车辆参数</div>
+            <div class="form-grid">
+                <div class="input-field"><label>油箱总容量 (升)</label><input type="number" id="regFuelCap" step="0.1" placeholder="例如 50"></div>
+                <div class="input-field"><label>电池总容量 (kWh)</label><input type="number" id="regElecCap" step="0.1" placeholder="例如 40"></div>
+                <div class="input-field"><label>当前总里程 (km)</label><input type="number" id="regTotalMile" step="0.1" placeholder="起始里程"></div>
+                <div class="input-field"><label>当前HEV里程 (km)</label><input type="number" id="regHevMile" step="0.1" placeholder="燃油里程"></div>
+                <div class="input-field"><label>当前油量 (%)</label><input type="number" id="regFuelPct" step="0.1" placeholder="0~100"></div>
+                <div class="input-field"><label>当前电量 (%)</label><input type="number" id="regChargePct" step="0.1" placeholder="0~100"></div>
+            </div>
+            <div class="input-field"><label>🔑 注册码</label><input type="text" id="regLicense" placeholder="8位字母数字码" required></div>
+            <button id="doRegisterBtn">注册</button>
+        </div>
+        <div id="authMsg" style="margin-top:1rem; color:#c13b1b;"></div>
+    </div>
+
+    <!-- 主应用界面 -->
+    <div id="mainApp" style="display:none;">
+        <div class="card">
+            <div class="card-header">
+                <span>📝 补能事件记录</span>
+                <div class="auth-bar">
+                    <span class="user-info" id="userNameSpan"></span>
+                    <button id="logoutBtn" class="btn-outline">退出登录</button>
+                </div>
+            </div>
+            <div class="type-selector" id="eventTypeToggle">
+                <button data-type="fuel" class="type-btn active">⛽ 加油事件</button>
+                <button data-type="ev" class="type-btn">🔋 充电事件</button>
+            </div>
+            <form id="recordForm" onsubmit="return false;">
+                <div class="form-grid">
+                    <div class="input-field"><label>总里程 (km)</label><input type="number" id="totalMileage" step="0.1" required></div>
+                    <div class="input-field"><label>HEV里程 (km)</label><input type="number" id="hevMileage" step="0.1" required></div>
+                    <div class="input-field"><label>金额 (元)</label><input type="number" id="amountMoney" step="0.01" required></div>
+                </div>
+                <div class="double-row">
+                    <div class="input-field"><label>操作前油量 (%)</label><input type="number" id="fuelPercentBefore" step="0.1" required></div>
+                    <div class="input-field"><label>操作前电量 (%)</label><input type="number" id="chargePercentBefore" step="0.1" required></div>
+                </div>
+                <div id="afterFuelField" class="double-row">
+                    <div class="input-field"><label>⛽ 加油后油量 (%)</label><input type="number" id="fuelPercentAfter" step="0.1" required></div>
+                    <div class="input-field" style="opacity:0.5; pointer-events:none;">
+                        <label style="color:#aaa;">充电后电量 (%)</label>
+                        <input type="text" value="—" disabled>
+                    </div>
+                </div>
+                <div id="afterChargeField" class="double-row" style="display:none;">
+                    <div class="input-field" style="opacity:0.5; pointer-events:none;">
+                        <label style="color:#aaa;">加油后油量 (%)</label>
+                        <input type="text" value="—" disabled>
+                    </div>
+                    <div class="input-field"><label>🔋 充电后电量 (%)</label><input type="number" id="chargePercentAfter" step="0.1"></div>
+                </div>
+                <!-- 加油量/充电量区块 -->
+                <div id="energyAddedField" class="double-row">
+                    <div class="input-field" id="fuelAmountField">
+                        <label>⛽ 加油量 (L)</label>
+                        <input type="number" id="fuelAmount" step="0.01" placeholder="可选，留空自动计算">
+                    </div>
+                    <div class="input-field" id="chargeAmountField" style="display:none;">
+                        <label>🔋 充电量 (kWh)</label>
+                        <input type="number" id="chargeAmount" step="0.01" placeholder="可选，留空自动计算">
+                    </div>
+                </div>
+                <div style="display: flex; gap:1rem; justify-content:flex-end;">
+                    <button type="submit" id="submitRecord">✅ 保存记录</button>
+                    <button type="button" id="clearAllBtn" class="btn-outline">🗑️ 清空所有记录</button>
+                </div>
+            </form>
+            <div class="info-note">💡 点击右上角用户名进入个人中心，可修改车辆参数或密码。</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span>📋 能耗记录明细</span>
+                <div>
+                    <span id="totalCostDisplay" style="font-weight: bold; background: #eef2f5; padding: 0.3rem 1rem; border-radius: 40px; margin-right: 10px;">累计花费: ¥0.00</span>
+                    <button id="exportExcelBtn" class="btn-outline" style="margin-right: 10px;">📎 导出Excel</button>
+                    <button id="importExcelBtn" class="btn-outline">📂 导入Excel</button>
+                    <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display: none;" />
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>类型</th>
+                            <th>总里程(km)</th>
+                            <th>HEV(km)</th>
+                            <th>EV(km)</th>
+                            <th>金额(元)</th>
+                            <th>补能量</th>
+                            <th>区间里程(km)</th>
+                            <th>油耗(L/100km)</th>
+                            <th>电耗(kWh/100km)</th>
+                            <th>总能耗(L/100km)</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="12">加载中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="chart-container">
+            <h3>📊 能耗趋势 (双轴)</h3>
+            <canvas id="unifiedChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- 注册协议弹窗 -->
+<div id="agreementModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+        <h3>📜 用户协议</h3>
+        <div class="modal-scroll" id="agreementContent">
+            <!-- 协议内容将在这里显示，由用户自定义 -->
+            <p>本网站仍位于测试阶段，并无法保证所有数据均可保留，存在某次更新时把数据覆盖的可能性，本网站不对数据承担任何责任，请定时导出数据自行备份，如数据丢失，可重新导回；测试期间注册码由网站管理员发放，请联系PerkyWEI获取；本网站为免费网站，不收取任何费用，亦不承担任何责任，因能力有限，可能导致数据泄露，本网站将不承担泄露的责任，请不要上传涉及个人隐私的信息</p>
+        </div>
+        <div id="agreeMsg" style="color:#c13b1b; font-size:0.85rem; margin-top:0.5rem;"></div>
+        <div class="modal-actions">
+            <label class="agree-checkbox">
+                <input type="checkbox" id="agreeCheckbox"> 我已阅读并同意以上协议
+            </label>
+            <div style="display:flex; gap:0.8rem;">
+                <button id="agreeCancelBtn" class="btn-outline">取消注册</button>
+                <button id="agreeConfirmBtn" class="btn-primary" disabled>确认注册</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
