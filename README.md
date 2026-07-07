@@ -6,31 +6,36 @@
 
 - **后端:** Node.js + Express + SQLite3
 - **前端:** 原生 HTML + CSS + JavaScript
-- **图表:** Chart.js
+- **图表:** Chart.js（离线版）
 - **反向代理:** Nginx / OpenResty
 
 ## 目录结构
 
 ```
 energy-tracker/
-├── server.js          # 后端服务（Express + SQLite）
-├── package.json       # 依赖配置
-├── database.db        # SQLite 数据库（自动创建）
-└── public/            # 前端静态文件
-    ├── index.html     # 用户主页面（登录/注册/记录）
-    ├── admin.html     # 管理员页面
-    ├── admin.js       # 管理员页面逻辑
-    ├── admin.css      # 管理员页面样式
-    ├── script.js      # 用户端逻辑
-    ├── style.css      # 用户端样式
-    └── user-guide.md  # 用户使用说明
+├── server.js              # 后端服务（Express + SQLite3）
+├── package.json           # npm 依赖配置
+├── package-lock.json      # 依赖锁定
+├── ecosystem.config.js    # PM2 配置（管理员密码设在这里）
+├── README.md              # 本文件
+├── CHANGELOG.md           # 更新日志
+└── public/                # 前端静态文件
+    ├── index.html         # 用户主页面
+    ├── script.js          # 前端业务逻辑
+    ├── style.css          # 毛玻璃主题样式
+    ├── mobile.css         # 手机适配样式
+    ├── admin.html         # 管理员后台页面
+    ├── admin.js           # 管理员后台逻辑
+    ├── admin.css          # 管理员后台样式
+    ├── chart.umd.min.js   # Chart.js 图表库（离线版）
+    └── xlsx.full.min.js   # XLSX 导出库（离线版）
 ```
 
 ## 部署步骤
 
 ### 1. 安装 Node.js
 
-要求 Node.js >= 16。
+要求 Node.js >= 18（推荐 20 LTS）。
 
 ```bash
 # Debian/Ubuntu
@@ -55,11 +60,21 @@ cd EnergyTracker
 npm install
 ```
 
-### 4. 配置 Nginx 反向代理（推荐）
+### 4. 设置管理员密码
+
+编辑 `ecosystem.config.js`，把 `ADMIN_PASSWORD` 改成你自己的密码：
+
+```javascript
+env: {
+  ADMIN_PASSWORD: '***'   // ← 改成你的密码
+}
+```
+
+管理员后台地址：`https://你的域名/admin.html`
+
+### 5. 配置 Nginx 反向代理（推荐）
 
 将 API 请求转发到 Node.js 后端（默认端口 3000）。
-
-Nginx 配置示例：
 
 ```nginx
 server {
@@ -76,57 +91,64 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
     }
+
+    # 禁止访问数据库
+    location ~ \.db$ {
+        deny all;
+    }
 }
 ```
 
-> 也可以直接通过 `http://localhost:3000` 访问（开发环境），此时不需要 Nginx。
+> 开发环境可以直接 `http://localhost:3000` 访问，不需要 Nginx。
 
-### 5. 启动服务
+### 6. 启动服务
 
 ```bash
-# 直接启动
+# 方式一：直接启动
 node server.js
 
-# 推荐使用 PM2（进程守护 + 开机自启）
+# 方式二：推荐 PM2（进程守护 + 自动重启）
 npm install -g pm2
-pm2 start server.js --name energy-tracker
+pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
 ```
 
 启动后访问 `http://your-domain.com` 即可。
 
-## 管理员密码修改
+## 管理后台
 
-管理员密码在 `server.js` 中定义，只有一个地方：
+| 功能 | 地址 |
+|------|------|
+| 用户端 | `https://你的域名/` |
+| 管理后台 | `https://你的域名/admin.html` |
 
-```javascript
-// 搜索这一行
-const ADMIN_PASSWORD = 'Admin@123';
-```
+管理员登录后可在后台生成注册码，新用户注册时需要填写有效注册码。
 
-改成你想要的密码后重启服务即可：
+## 修改密码
+
+### 管理员密码
+
+编辑 `ecosystem.config.js`，修改 `ADMIN_PASSWORD` 的值，然后重启：
 
 ```bash
-pm2 restart energy-tracker
+pm2 restart oil-system
 ```
 
-无需修改任何其他文件。
+### 用户密码
 
-## 生成注册码
-
-管理员登录后可在 `/admin.html` 页面生成注册码，新用户注册时需要填写有效的注册码。
+用户在个人中心（点击右上角头像）自行修改，需输入原密码。
 
 ## 常见问题
 
 **Q: 数据库在哪？**  
-A: SQLite 数据库文件 `database.db` 会在启动时自动创建在项目根目录。
+A: SQLite 文件 `database.db` 启动后自动创建在项目根目录。
 
 **Q: 如何备份数据？**  
-A: 直接备份 `database.db` 文件即可。
+A: 直接复制 `database.db` 文件即可，恢复时覆盖后重启服务。
 
 **Q: 忘记管理员密码？**  
-A: 直接编辑 `server.js`，修改 `ADMIN_PASSWORD` 的值，然后重启服务。
+A: 编辑 `ecosystem.config.js` 里的 `ADMIN_PASSWORD`，然后 `pm2 restart oil-system`。
 
 **Q: 如何修改端口号？**  
-A: 编辑 `server.js`，修改 `PORT` 变量的值（默认 3000）。
+A: 编辑 `server.js`，修改 `const PORT = 3000;` 这一行，然后重启。
